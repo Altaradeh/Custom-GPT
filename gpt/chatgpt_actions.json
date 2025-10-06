@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Financial Analytics API",
-    "description": "Complete API for XMetric, YMetric, Portfolio analysis, and data file discovery",
+    "description": "API for analyzing user-uploaded CSV files: XMetric, YMetric, and Portfolio analysis",
     "version": "v1.0.0"
   },
   "servers": [
@@ -11,44 +11,10 @@
     }
   ],
   "paths": {
-    "/data/files": {
-      "get": {
-        "description": "List all available data files (CSV/Parquet) that can be analyzed",
-        "operationId": "listDataFiles",
-        "responses": {
-          "200": {
-            "description": "List of available files",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "files": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "name": {"type": "string", "description": "File name without extension - use for table_name"},
-                          "full_name": {"type": "string"},
-                          "type": {"type": "string"},
-                          "size_bytes": {"type": "integer"}
-                        }
-                      }
-                    },
-                    "count": {"type": "integer"},
-                    "message": {"type": "string"}
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/xmetric": {
+    "/xmetric/data": {
       "post": {
-        "description": "Primary time-series analysis with aggregations and scaling",
-        "operationId": "analyzeXMetric",
+        "description": "Analyze CSV data uploaded by user. When user uploads a CSV file to ChatGPT, read it with Code Interpreter and send the data here.",
+        "operationId": "analyzeXMetricFromData",
         "requestBody": {
           "required": true,
           "content": {
@@ -56,10 +22,13 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "table_name": {
-                    "type": "string",
-                    "description": "Name of CSV/Parquet file (without extension). Call /data/files to see available files.",
-                    "example": "financial_timeseries_demo"
+                  "csv_data": {
+                    "type": "array",
+                    "description": "List of row dictionaries from the uploaded CSV file",
+                    "items": {
+                      "type": "object",
+                      "description": "Row data as key-value pairs"
+                    }
                   },
                   "date_column": {
                     "type": "string",
@@ -84,7 +53,7 @@
                     "description": "Scaling factor"
                   }
                 },
-                "required": ["table_name", "date_column", "value_column"]
+                "required": ["csv_data", "date_column", "value_column"]
               }
             }
           }
@@ -122,10 +91,10 @@
         }
       }
     },
-    "/ymetric": {
+    "/ymetric/data": {
       "post": {
-        "description": "Secondary metrics analysis for comparative studies",
-        "operationId": "analyzeYMetric",
+        "description": "Analyze CSV data uploaded by user. When user uploads a CSV file to ChatGPT, read it with Code Interpreter and send the data here.",
+        "operationId": "analyzeYMetricFromData",
         "requestBody": {
           "required": true,
           "content": {
@@ -133,10 +102,13 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "table_name": {
-                    "type": "string",
-                    "description": "Name of CSV/Parquet file (without extension)",
-                    "example": "financial_timeseries_demo"
+                  "csv_data": {
+                    "type": "array",
+                    "description": "List of row dictionaries from the uploaded CSV file",
+                    "items": {
+                      "type": "object",
+                      "description": "Row data as key-value pairs"
+                    }
                   },
                   "date_column": {
                     "type": "string",
@@ -145,7 +117,7 @@
                   },
                   "value_column": {
                     "type": "string",
-                    "description": "Column name for numeric values",
+                    "description": "Column name for numeric values to analyze",
                     "example": "volume"
                   },
                   "aggregation": {
@@ -160,7 +132,7 @@
                     "minimum": 0
                   }
                 },
-                "required": ["table_name", "date_column", "value_column"]
+                "required": ["csv_data", "date_column", "value_column"]
               }
             }
           }
@@ -198,10 +170,10 @@
         }
       }
     },
-    "/portfolio/upload": {
+    "/portfolio/data": {
       "post": {
-        "description": "Process and normalize portfolio data from a file",
-        "operationId": "uploadPortfolio",
+        "description": "Process portfolio data sent directly as JSON. Use this when user uploads a file to ChatGPT and you need to send the parsed data to the API.",
+        "operationId": "portfolioFromData",
         "requestBody": {
           "required": true,
           "content": {
@@ -209,10 +181,29 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "file_path": {
-                    "type": "string",
-                    "description": "Name of portfolio file (with or without extension). File will be searched in the data directory. Example: 'sample_portfolio' or 'sample_portfolio.csv'",
-                    "example": "sample_portfolio"
+                  "holdings": {
+                    "type": "array",
+                    "description": "Array of portfolio holdings with ticker and weight",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "ticker": {
+                          "type": "string",
+                          "description": "Stock ticker symbol"
+                        },
+                        "weight": {
+                          "type": "number",
+                          "description": "Portfolio weight (can be percentage or decimal)",
+                          "minimum": 0
+                        }
+                      },
+                      "required": ["ticker", "weight"]
+                    },
+                    "example": [
+                      {"ticker": "AAPL", "weight": 0.25},
+                      {"ticker": "MSFT", "weight": 0.30},
+                      {"ticker": "GOOGL", "weight": 0.45}
+                    ]
                   },
                   "normalize_weights": {
                     "type": "boolean",
@@ -220,14 +211,14 @@
                     "description": "Normalize weights to sum to 1.0"
                   }
                 },
-                "required": ["file_path"]
+                "required": ["holdings"]
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Portfolio processed",
+            "description": "Portfolio processed successfully",
             "content": {
               "application/json": {
                 "schema": {

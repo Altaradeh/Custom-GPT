@@ -3,26 +3,31 @@
 These are suggested prompts to include in the Custom GPT configuration to help users get started quickly.
 
 ## Portfolio Analysis
-- "Upload my portfolio and run risk analysis"
-- "Analyze my holdings using both XMetric and YMetric"
-- "Show me a scatter plot comparing my positions"
+- "Upload my portfolio CSV and analyze the risk metrics"
+- "Process my portfolio file and show normalized weights"
+- "Upload my holdings data and create a summary report"
 
-## Time Series Analysis
-- "Run XMetric analysis on the sample market data"
-- "Create a time series chart for quarterly earnings trends"
-- "Compare year-over-year performance metrics"
+## Time Series Analysis  
+- "Upload my stock data CSV and run XMetric analysis"
+- "Analyze my financial time series with YMetric"
+- "Process my uploaded data and create trend charts"
+
+## File Upload Workflows
+- "I'm uploading financial data - analyze the trends"
+- "Here's my portfolio file - what insights can you provide?"
+- "Upload complete - run comprehensive analysis"
 
 ## Research & Insights
-- "Explain the relationship between XMetric and YMetric scores"
-- "What does recent earnings data tell us about tech sector trends?"
-- "Search for drought impact analysis in agricultural companies"
+- "Explain XMetric vs YMetric analysis methodologies"
+- "Search for market volatility research in your knowledge base"
+- "What do current financial trends suggest for portfolio strategy?"
 
 ## Visualization & Reporting
-- "Generate both a time series and scatter plot from my data"
-- "Create an executive summary with key charts"
-- "Show me correlation analysis between different metrics"
+- "Create charts from my uploaded data"
+- "Generate executive summary with visualizations"
+- "Show correlation analysis between different metrics"
 
-## Sample Workflows
-- "I'm a portfolio manager - analyze tech sector exposure"
-- "As an executive, give me high-level market insights"
-- "Academic analysis: validate XMetric methodology with citations"
+## User Personas
+- "I'm a portfolio manager - analyze my uploaded holdings"
+- "As an executive, summarize insights from my data file" 
+- "Academic perspective: validate methodology with citations"
