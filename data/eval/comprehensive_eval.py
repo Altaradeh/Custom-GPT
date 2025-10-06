@@ -15,7 +15,6 @@ from jsonschema import validate
 from tools.xmetric import handle_xmetric
 from tools.ymetric import handle_ymetric
 from tools.file_upload import handle_portfolio_upload
-from tools.chart_utils import generate_time_series_chart, generate_scatter_plot, generate_combined_analysis_chart
 
 def load_schema(schema_name: str) -> dict:
     """Load JSON schema for validation"""
@@ -92,34 +91,6 @@ def test_ymetric_tool():
     except Exception as e:
         print(f"❌ YMetric execution failed: {e}")
         return None
-
-def test_chart_generation(xmetric_result, ymetric_result):
-    """Test chart generation utilities"""
-    print("\n🧪 Testing Chart Generation...")
-    
-    if not xmetric_result or not ymetric_result:
-        print("❌ Cannot test charts - missing metric results")
-        return
-    
-    try:
-        # Test time series chart
-        time_chart = generate_time_series_chart(
-            xmetric_result["series"], 
-            "XMetric Time Series Analysis"
-        )
-        print("✅ Time series chart generated")
-        print(f"   Chart type: {time_chart['type']}")
-        print(f"   Data points: {len(time_chart['data'])}")
-        
-        # Test scatter plot
-        scatter_chart = generate_combined_analysis_chart(xmetric_result, ymetric_result)
-        print("✅ Scatter plot generated")
-        print(f"   Chart type: {scatter_chart['type']}")
-        print(f"   X value: {scatter_chart['data'][0]['x']:.2f}")
-        print(f"   Y value: {scatter_chart['data'][0]['y']:.2f}")
-        
-    except Exception as e:
-        print(f"❌ Chart generation failed: {e}")
 
 def test_portfolio_upload():
     """Test portfolio upload functionality"""
@@ -199,7 +170,6 @@ def validate_project_structure():
         "tools/xmetric.py",
         "tools/ymetric.py", 
         "tools/file_upload.py",
-        "tools/chart_utils.py",
         "schemas/xmetric.schema.json",
         "schemas/ymetric.schema.json",
         "schemas/portfolio.schema.json",
@@ -243,9 +213,6 @@ def main():
     
     # Test basic analysis (from original run_eval.py)
     run_basic_analysis()
-    
-    # Test chart generation
-    test_chart_generation(xmetric_result, ymetric_result)
     
     # Test portfolio upload
     test_portfolio_upload()

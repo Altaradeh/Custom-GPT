@@ -25,10 +25,9 @@ c:\Python\Custom GPT\
 │   ├── xmetric.schema.json
 │   └── ymetric.schema.json
 ├── tools/                        # Core tool implementations
-│   ├── file_upload.py
-│   ├── xmetric.py
-│   └── ymetric.py
-├── config.md                     # Configuration documentation
+│   ├── file_upload.py           # Portfolio file processing
+│   ├── xmetric.py               # Primary time-series analysis
+│   └── ymetric.py               # Secondary metrics analysis
 ├── poetry.lock                   # Dependency lock file
 ├── pyproject.toml               # Python project configuration
 ├── README.md                    # Project overview

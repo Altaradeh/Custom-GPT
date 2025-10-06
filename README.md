@@ -40,8 +40,6 @@ Follow the detailed setup guide in [`SETUP.md`](SETUP.md)
   xmetric.py           # Primary time-series analysis
   ymetric.py           # Secondary metrics analysis
   file_upload.py       # Portfolio upload & normalization
-  chart_utils.py       # Chart generation for GPT artifacts
-  __init__.py          # Package initialization
 
 /mcp                    # MCP Tool Manifests
   xmetric_manifest.json    # XMetric tool specification

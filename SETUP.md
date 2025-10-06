@@ -116,7 +116,6 @@ poetry add fastapi uvicorn
   xmetric.py           # Primary time series analysis
   ymetric.py           # Secondary metrics analysis  
   file_upload.py       # Portfolio upload handler
-  chart_utils.py       # Chart generation utilities
 
 /schemas                # JSON schemas for validation
   xmetric.schema.json
