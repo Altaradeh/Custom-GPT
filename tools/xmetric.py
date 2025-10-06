@@ -21,8 +21,19 @@ def handle_xmetric(input_json: dict, data_root: str = "data") -> dict:
         df = pd.read_csv(p)
     df = df[[req.date_column, req.value_column]].dropna()
     df[req.date_column] = pd.to_datetime(df[req.date_column])
-    if req.aggregation != "none":
-        df = df.groupby(req.date_column).agg({req.value_column: req.aggregation}).reset_index()
+    if req.aggregation.lower() != "none":
+        # Map aggregation types to pandas functions (case-insensitive)
+        agg_map = {
+            "sum": "sum",
+            "mean": "mean", 
+            "max": "max",
+            "min": "min"
+        }
+        agg_lower = req.aggregation.lower()
+        if agg_lower in agg_map:
+            df = df.groupby(req.date_column).agg({req.value_column: agg_map[agg_lower]}).reset_index()
+        else:
+            raise ValueError(f"Unsupported aggregation: {req.aggregation}. Use: none, sum, mean, max, min (case-insensitive)")
     df[req.value_column] = df[req.value_column] * req.scale_factor
     series = [{"date": d.strftime("%Y-%m-%d"), "value": float(v)} for d, v in zip(df[req.date_column], df[req.value_column])]
     summary = {"mean": float(df[req.value_column].mean()), "count": int(len(df))}

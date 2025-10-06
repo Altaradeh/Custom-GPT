@@ -1,45 +1,62 @@
 {
   "name": "xmetric",
-  "description": "Computes time-series metrics (mean, count, etc.) from uploaded portfolio data tables.",
   "version": "1.0.0",
+  "description": "XMetric tool for primary time-series analysis with aggregation and scaling",
+  "author": "Custom GPT Project",
+  "license": "MIT",
   "tools": [
     {
-      "name": "xmetric",
-      "type": "api",
-      "description": "Aggregate and analyze time-series data from a CSV table under /data.",
-      "parameters": {
+      "name": "handle_xmetric",
+      "description": "Process time series data from CSV/Parquet files with configurable aggregation and scaling",
+      "inputSchema": {
+        "$ref": "../schemas/xmetric.schema.json"
+      },
+      "outputSchema": {
         "type": "object",
         "properties": {
-          "table_name": {
-            "type": "string",
-            "description": "CSV filename located under /data."
+          "series": {
+            "type": "array",
+            "description": "Time series data points",
+            "items": {
+              "type": "object",
+              "properties": {
+                "date": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "Date in YYYY-MM-DD format"
+                },
+                "value": {
+                  "type": "number",
+                  "description": "Processed numeric value"
+                }
+              },
+              "required": ["date", "value"]
+            }
           },
-          "date_column": {
-            "type": "string",
-            "description": "Column name containing date values."
-          },
-          "value_column": {
-            "type": "string",
-            "description": "Column name containing numeric values."
-          },
-          "aggregation": {
-            "type": "string",
-            "enum": ["none", "daily", "weekly", "monthly"],
-            "default": "none"
-          },
-          "scale_factor": {
-            "type": "number",
-            "description": "Multiplier for the numeric values.",
-            "default": 1.0
+          "summary": {
+            "type": "object",
+            "properties": {
+              "mean": {
+                "type": "number",
+                "description": "Mean of all values"
+              },
+              "count": {
+                "type": "integer",
+                "description": "Number of data points"
+              }
+            },
+            "required": ["mean", "count"]
           }
         },
-        "required": ["table_name", "date_column", "value_column"]
-      },
-      "execution": {
-        "type": "rest",
-        "method": "POST",
-        "url": "http://127.0.0.1:8000/xmetric"
+        "required": ["series", "summary"]
       }
+    }
+  ],
+  "resources": [
+    {
+      "uri": "file://data/",
+      "name": "data_directory",
+      "description": "Directory containing CSV and Parquet files for analysis"
     }
   ]
 }

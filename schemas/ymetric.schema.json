@@ -1,8 +1,32 @@
 {
+  "$id": "ymetric.v1",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "YMetric Schema",
   "type": "object",
   "properties": {
+    "table_name": {
+      "type": "string",
+      "description": "Name of the CSV/Parquet file in the data directory"
+    },
+    "date_column": {
+      "type": "string", 
+      "description": "Column name containing date values"
+    },
+    "value_column": {
+      "type": "string",
+      "description": "Column name containing numeric values to analyze"
+    },
+    "aggregation": {
+      "type": "string",
+      "enum": ["none", "sum", "mean", "max", "min"],
+      "default": "none",
+      "description": "Aggregation method to apply (case-insensitive: None, Sum, Mean, Max, Min all accepted)"
+    },
+    "scale_factor": {
+      "type": "number",
+      "default": 1.0,
+      "description": "Scaling factor to multiply values"
+    }
   },
-  "required": []
+  "required": ["table_name", "date_column", "value_column"]
 }

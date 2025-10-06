@@ -1,31 +1,54 @@
 {
   "name": "ymetric",
   "version": "1.0.0",
-  "description": "YMetric tool for secondary data analysis and processing",
+  "description": "YMetric tool for secondary metrics and cross-sectional analysis",
   "author": "Custom GPT Project",
   "license": "MIT",
   "tools": [
     {
       "name": "handle_ymetric",
-      "description": "Process secondary metrics and analytics",
+      "description": "Process secondary metrics for comparative analysis, similar to XMetric but optimized for cross-sectional comparisons",
       "inputSchema": {
         "$ref": "../schemas/ymetric.schema.json"
       },
       "outputSchema": {
         "type": "object",
         "properties": {
-          "result": {
-            "type": "object",
-            "description": "Processed YMetric results"
+          "series": {
+            "type": "array",
+            "description": "Time series data points for YMetric analysis",
+            "items": {
+              "type": "object",
+              "properties": {
+                "date": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "Date in YYYY-MM-DD format"
+                },
+                "value": {
+                  "type": "number",
+                  "description": "Processed YMetric value"
+                }
+              },
+              "required": ["date", "value"]
+            }
           },
-          "metadata": {
+          "summary": {
             "type": "object",
             "properties": {
-              "processed_at": {"type": "string"},
-              "status": {"type": "string"}
-            }
+              "mean": {
+                "type": "number",
+                "description": "Mean of YMetric values"
+              },
+              "count": {
+                "type": "integer",
+                "description": "Number of data points"
+              }
+            },
+            "required": ["mean", "count"]
           }
-        }
+        },
+        "required": ["series", "summary"]
       }
     }
   ],

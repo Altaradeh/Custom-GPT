@@ -1,39 +1,49 @@
 {
   "name": "portfolio",
   "version": "1.0.0",
-  "description": "Portfolio management and file upload tool",
+  "description": "Portfolio management and file upload tool with weight normalization",
   "author": "Custom GPT Project",
   "license": "MIT",
   "tools": [
     {
       "name": "handle_portfolio_upload",
-      "description": "Handle portfolio file uploads and processing",
+      "description": "Process portfolio files (CSV/XLSX) with automatic weight normalization and validation",
       "inputSchema": {
         "$ref": "../schemas/portfolio.schema.json"
       },
       "outputSchema": {
         "type": "object",
         "properties": {
-          "upload_status": {"type": "string"},
-          "file_info": {
-            "type": "object",
-            "properties": {
-              "filename": {"type": "string"},
-              "size": {"type": "integer"},
-              "processed_at": {"type": "string"}
+          "rows": {
+            "type": "array",
+            "description": "Normalized portfolio holdings",
+            "items": {
+              "type": "object",
+              "properties": {
+                "ticker": {
+                  "type": "string",
+                  "description": "Stock ticker symbol"
+                },
+                "weight": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1,
+                  "description": "Normalized weight (sum of all weights = 1.0)"
+                }
+              },
+              "required": ["ticker", "weight"]
             }
           },
-          "validation_results": {
-            "type": "object",
-            "properties": {
-              "is_valid": {"type": "boolean"},
-              "errors": {
-                "type": "array",
-                "items": {"type": "string"}
-              }
-            }
+          "normalized": {
+            "type": "boolean",
+            "description": "Whether weights were normalized"
+          },
+          "total_holdings": {
+            "type": "integer",
+            "description": "Number of holdings in portfolio"
           }
-        }
+        },
+        "required": ["rows", "normalized"]
       }
     }
   ],
