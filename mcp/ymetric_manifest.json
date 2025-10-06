@@ -1,0 +1,39 @@
+{
+  "name": "ymetric",
+  "version": "1.0.0",
+  "description": "YMetric tool for secondary data analysis and processing",
+  "author": "Custom GPT Project",
+  "license": "MIT",
+  "tools": [
+    {
+      "name": "handle_ymetric",
+      "description": "Process secondary metrics and analytics",
+      "inputSchema": {
+        "$ref": "../schemas/ymetric.schema.json"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "object",
+            "description": "Processed YMetric results"
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "processed_at": {"type": "string"},
+              "status": {"type": "string"}
+            }
+          }
+        }
+      }
+    }
+  ],
+  "resources": [
+    {
+      "uri": "file://data/",
+      "name": "data_directory",
+      "description": "Directory containing data files for YMetric analysis"
+    }
+  ]
+}

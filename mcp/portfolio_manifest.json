@@ -1,0 +1,52 @@
+{
+  "name": "portfolio",
+  "version": "1.0.0",
+  "description": "Portfolio management and file upload tool",
+  "author": "Custom GPT Project",
+  "license": "MIT",
+  "tools": [
+    {
+      "name": "handle_portfolio_upload",
+      "description": "Handle portfolio file uploads and processing",
+      "inputSchema": {
+        "$ref": "../schemas/portfolio.schema.json"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "upload_status": {"type": "string"},
+          "file_info": {
+            "type": "object",
+            "properties": {
+              "filename": {"type": "string"},
+              "size": {"type": "integer"},
+              "processed_at": {"type": "string"}
+            }
+          },
+          "validation_results": {
+            "type": "object",
+            "properties": {
+              "is_valid": {"type": "boolean"},
+              "errors": {
+                "type": "array",
+                "items": {"type": "string"}
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "resources": [
+    {
+      "uri": "file://data/uploads/",
+      "name": "upload_directory",
+      "description": "Directory for uploaded portfolio files"
+    },
+    {
+      "uri": "file://schemas/portfolio.schema.json",
+      "name": "portfolio_schema",
+      "description": "JSON schema for portfolio data validation"
+    }
+  ]
+}

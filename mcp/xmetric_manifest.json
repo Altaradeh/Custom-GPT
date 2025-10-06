@@ -1,0 +1,45 @@
+{
+  "name": "xmetric",
+  "description": "Computes time-series metrics (mean, count, etc.) from uploaded portfolio data tables.",
+  "version": "1.0.0",
+  "tools": [
+    {
+      "name": "xmetric",
+      "type": "api",
+      "description": "Aggregate and analyze time-series data from a CSV table under /data.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "table_name": {
+            "type": "string",
+            "description": "CSV filename located under /data."
+          },
+          "date_column": {
+            "type": "string",
+            "description": "Column name containing date values."
+          },
+          "value_column": {
+            "type": "string",
+            "description": "Column name containing numeric values."
+          },
+          "aggregation": {
+            "type": "string",
+            "enum": ["none", "daily", "weekly", "monthly"],
+            "default": "none"
+          },
+          "scale_factor": {
+            "type": "number",
+            "description": "Multiplier for the numeric values.",
+            "default": 1.0
+          }
+        },
+        "required": ["table_name", "date_column", "value_column"]
+      },
+      "execution": {
+        "type": "rest",
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/xmetric"
+      }
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "$id":"portfolio.v1",
+  "type":"object",
+  "properties":{
+    "rows":{"type":"array","items":{"type":"object","properties":{"ticker":{"type":"string"},"weight":{"type":"number"}}}},
+    "normalized":{"type":"boolean"}
+  },
+  "required":["rows"]
+}
