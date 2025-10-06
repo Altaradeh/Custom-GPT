@@ -48,6 +48,11 @@ Follow the detailed setup guide in [`SETUP.md`](SETUP.md)
   ymetric_manifest.json    # YMetric tool specification  
   portfolio_manifest.json # Portfolio tool specification
 
+/actions                # ChatGPT Actions (OpenAPI 3.1.0)
+  xmetric_action.json      # XMetric OpenAPI specification
+  ymetric_action.json      # YMetric OpenAPI specification
+  portfolio_action.json    # Portfolio OpenAPI specification
+
 /schemas                # JSON Schema Validation
   xmetric.schema.json     # XMetric input validation
   ymetric.schema.json     # YMetric input validation

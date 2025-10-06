@@ -140,10 +140,11 @@ async def portfolio_upload(request: PortfolioUploadRequest):
     Portfolio Upload: Process portfolio files with weight normalization
     """
     try:
-        result = handle_portfolio_upload(request.dict())
+        result = handle_portfolio_upload(request.dict(), data_root="data")
         return PortfolioResponse(**result)
     except FileNotFoundError as e:
-        raise HTTPException(status_code=404, detail=f"Portfolio file not found: {str(e)}")
+        # Return helpful error with available files
+        raise HTTPException(status_code=404, detail=str(e))
     except ValueError as e:
         raise HTTPException(status_code=400, detail=f"Invalid portfolio data: {str(e)}")
     except Exception as e:
@@ -170,7 +171,7 @@ async def portfolio_upload_file(file: UploadFile = File(...), normalize_weights:
             result = handle_portfolio_upload({
                 "file_path": tmp_file_path,
                 "normalize_weights": normalize_weights
-            })
+            }, data_root="data")
             return PortfolioResponse(**result)
         finally:
             # Clean up temporary file
@@ -210,6 +211,38 @@ async def list_tools():
             }
         }
     }
+
+@app.get("/data/files")
+async def list_data_files():
+    """List available data files in the data directory"""
+    try:
+        data_dir = Path("data")
+        if not data_dir.exists():
+            return {"files": [], "message": "Data directory not found"}
+        
+        files = []
+        for file_path in data_dir.glob("*.csv"):
+            files.append({
+                "name": file_path.stem,  # filename without extension
+                "full_name": file_path.name,
+                "type": "csv",
+                "size_bytes": file_path.stat().st_size
+            })
+        for file_path in data_dir.glob("*.parquet"):
+            files.append({
+                "name": file_path.stem,
+                "full_name": file_path.name,
+                "type": "parquet",
+                "size_bytes": file_path.stat().st_size
+            })
+        
+        return {
+            "files": files,
+            "count": len(files),
+            "message": f"Found {len(files)} data file(s)"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error listing files: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn

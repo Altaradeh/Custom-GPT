@@ -1,0 +1,257 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Financial Analytics API",
+    "description": "Complete API for XMetric, YMetric, Portfolio analysis, and data file discovery",
+    "version": "v1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://ectypal-tonya-unthinning.ngrok-free.dev"
+    }
+  ],
+  "paths": {
+    "/data/files": {
+      "get": {
+        "description": "List all available data files (CSV/Parquet) that can be analyzed",
+        "operationId": "listDataFiles",
+        "responses": {
+          "200": {
+            "description": "List of available files",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "files": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {"type": "string", "description": "File name without extension - use for table_name"},
+                          "full_name": {"type": "string"},
+                          "type": {"type": "string"},
+                          "size_bytes": {"type": "integer"}
+                        }
+                      }
+                    },
+                    "count": {"type": "integer"},
+                    "message": {"type": "string"}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/xmetric": {
+      "post": {
+        "description": "Primary time-series analysis with aggregations and scaling",
+        "operationId": "analyzeXMetric",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "table_name": {
+                    "type": "string",
+                    "description": "Name of CSV/Parquet file (without extension). Call /data/files to see available files.",
+                    "example": "financial_timeseries_demo"
+                  },
+                  "date_column": {
+                    "type": "string",
+                    "description": "Column name for dates",
+                    "example": "date"
+                  },
+                  "value_column": {
+                    "type": "string",
+                    "description": "Column name for numeric values to analyze",
+                    "example": "close"
+                  },
+                  "aggregation": {
+                    "type": "string",
+                    "enum": ["none", "sum", "mean", "max", "min"],
+                    "default": "none",
+                    "description": "Aggregation method (case-insensitive)"
+                  },
+                  "scale_factor": {
+                    "type": "number",
+                    "default": 1.0,
+                    "minimum": 0,
+                    "description": "Scaling factor"
+                  }
+                },
+                "required": ["table_name", "date_column", "value_column"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Analysis results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "series": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "date": {"type": "string"},
+                          "value": {"type": "number"}
+                        }
+                      }
+                    },
+                    "summary": {
+                      "type": "object",
+                      "properties": {
+                        "mean": {"type": "number"},
+                        "count": {"type": "integer"}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ymetric": {
+      "post": {
+        "description": "Secondary metrics analysis for comparative studies",
+        "operationId": "analyzeYMetric",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "table_name": {
+                    "type": "string",
+                    "description": "Name of CSV/Parquet file (without extension)",
+                    "example": "financial_timeseries_demo"
+                  },
+                  "date_column": {
+                    "type": "string",
+                    "description": "Column name for dates",
+                    "example": "date"
+                  },
+                  "value_column": {
+                    "type": "string",
+                    "description": "Column name for numeric values",
+                    "example": "volume"
+                  },
+                  "aggregation": {
+                    "type": "string",
+                    "enum": ["none", "sum", "mean", "max", "min"],
+                    "default": "none",
+                    "description": "Aggregation method"
+                  },
+                  "scale_factor": {
+                    "type": "number",
+                    "default": 1.0,
+                    "minimum": 0
+                  }
+                },
+                "required": ["table_name", "date_column", "value_column"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Analysis results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "series": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "date": {"type": "string"},
+                          "value": {"type": "number"}
+                        }
+                      }
+                    },
+                    "summary": {
+                      "type": "object",
+                      "properties": {
+                        "mean": {"type": "number"},
+                        "count": {"type": "integer"}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/portfolio/upload": {
+      "post": {
+        "description": "Process and normalize portfolio data from a file",
+        "operationId": "uploadPortfolio",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file_path": {
+                    "type": "string",
+                    "description": "Name of portfolio file (with or without extension). File will be searched in the data directory. Example: 'sample_portfolio' or 'sample_portfolio.csv'",
+                    "example": "sample_portfolio"
+                  },
+                  "normalize_weights": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Normalize weights to sum to 1.0"
+                  }
+                },
+                "required": ["file_path"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Portfolio processed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "ticker": {"type": "string"},
+                          "weight": {"type": "number"}
+                        }
+                      }
+                    },
+                    "normalized": {"type": "boolean"},
+                    "total_holdings": {"type": "integer"}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

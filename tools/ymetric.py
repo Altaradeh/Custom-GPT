@@ -13,8 +13,17 @@ class YMetricInput(BaseModel):
 def handle_ymetric(input_json: dict, data_root: str = "data") -> dict:
     req = YMetricInput(**input_json)
     p = Path(data_root) / req.table_name
+    
+    # If path doesn't exist, try adding extensions
     if not p.exists():
-        raise FileNotFoundError(f"{p} not found")
+        for ext in [".csv", ".parquet"]:
+            p_with_ext = Path(data_root) / f"{req.table_name}{ext}"
+            if p_with_ext.exists():
+                p = p_with_ext
+                break
+        else:
+            raise FileNotFoundError(f"File not found: {req.table_name} (tried .csv and .parquet extensions in {data_root})")
+    
     if p.suffix.lower() in (".parquet",):
         df = pd.read_parquet(p)
     else:
