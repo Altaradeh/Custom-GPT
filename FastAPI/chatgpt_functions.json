@@ -1,0 +1,101 @@
+{
+  "functions": [
+    {
+      "name": "get_longterm_scenarios",
+      "description": "Get all available long-term financial market scenarios with semantic categorization. Use this to discover what investment scenarios are available for analysis. Returns scenarios with categories like 'conservative', 'moderate', and 'aggressive' that are easy to understand and discuss.",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "endpoint": "GET /long_term/scenarios"
+    },
+    {
+      "name": "analyze_longterm_scenario",
+      "description": "Get comprehensive analysis of a specific long-term investment scenario including statistics, risk metrics, and visualization data. Use this when users ask about specific investment scenarios, risk levels, or want to compare different long-term strategies. The response includes both numerical data and semantic categories.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "mean": {
+            "type": "number",
+            "description": "Target annual return as decimal (e.g., 0.06 for 6% annual return)",
+            "minimum": 0.0,
+            "maximum": 0.20
+          },
+          "spread": {
+            "type": "number", 
+            "description": "Target risk/spread level (higher values = more volatile outcomes)",
+            "minimum": 0.5,
+            "maximum": 5.0
+          }
+        },
+        "required": ["mean", "spread"]
+      },
+      "endpoint": "GET /long_term/paths"
+    },
+    {
+      "name": "get_shortterm_levels",
+      "description": "List short-term crisis levels (1–7) and their parameter metadata (drawdown, durations, etc.).",
+      "parameters": {"type": "object", "properties": {}, "required": []},
+      "endpoint": "GET /short_term/levels"
+    },
+    {
+      "name": "get_shortterm_baseline",
+      "description": "Get the precomputed monthly baseline table comparing 'normal' vs 'fragile' regimes.",
+      "parameters": {"type": "object", "properties": {}, "required": []},
+      "endpoint": "GET /short_term/baseline"
+    },
+    {
+      "name": "shortterm_demo_summary",
+      "description": "Generate a small in-memory demo summary of short-term crisis paths for a chosen level, returning smoothed stats and a monthly table.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "level": {"type": "integer", "minimum": 1, "maximum": 7, "description": "Crisis level rank (default 3)"},
+          "n_paths": {"type": "integer", "minimum": 10, "maximum": 200, "description": "Accepted paths to sample (default 50)"},
+          "random_state": {"type": "integer", "description": "Optional RNG seed"}
+        },
+        "required": []
+      },
+      "endpoint": "GET /short_term/demo_summary"
+    }
+  ],
+  "usage_examples": [
+    {
+      "user_query": "What long-term investment scenarios do you have available?",
+      "function_call": "get_longterm_scenarios",
+      "explanation": "User wants to see available scenarios"
+    },
+    {
+      "user_query": "Show me a conservative long-term investment with 5% returns",
+      "function_call": "analyze_longterm_scenario",
+      "parameters": {"mean": 0.05, "spread": 1.0},
+      "explanation": "User wants conservative scenario analysis"
+    },
+    {
+      "user_query": "What would a moderate risk 6% return scenario look like?",
+      "function_call": "analyze_longterm_scenario", 
+      "parameters": {"mean": 0.06, "spread": 2.0},
+      "explanation": "User wants moderate risk scenario analysis"
+    },
+    {
+      "user_query": "Compare aggressive vs conservative investment strategies",
+      "function_call": "get_longterm_scenarios",
+      "explanation": "First get available scenarios to identify aggressive vs conservative options"
+    }
+  ],
+  "semantic_mappings": {
+    "risk_levels": {
+      "conservative": {"spread_range": [1.0, 1.5], "description": "Low risk, stable outcomes"},
+      "moderate": {"spread_range": [1.5, 2.5], "description": "Balanced risk-reward"},
+      "aggressive": {"spread_range": [2.5, 5.0], "description": "High risk, high potential reward"}
+    },
+    "return_categories": {
+      "very_low": {"return_range": [0.0, 0.03], "description": "Below 3% annual return"},
+      "low": {"return_range": [0.03, 0.05], "description": "3-5% annual return"},
+      "moderate": {"return_range": [0.05, 0.07], "description": "5-7% annual return"},
+      "high": {"return_range": [0.07, 0.09], "description": "7-9% annual return"},
+      "very_high": {"return_range": [0.09, 0.20], "description": "Above 9% annual return"}
+    }
+  }
+}

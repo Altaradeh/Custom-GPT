@@ -1,33 +1,48 @@
-# Prompt Cards (Conversation Starters)
+# Most Valuable Custom GPT Conversation Starters
 
-These are suggested prompts to include in the Custom GPT configuration to help users get started quickly.
+## 🎯 **Core Investment Analysis** (Most Important)
 
-## Portfolio Analysis
-- "Upload my portfolio CSV and analyze the risk metrics"
-- "Process my portfolio file and show normalized weights"
-- "Upload my holdings data and create a summary report"
+### "What long-term investment scenarios are available?"
+*🔥 ESSENTIAL: Discover all available scenarios with semantic risk categories - perfect first interaction*
 
-## Time Series Analysis  
-- "Upload my stock data CSV and run XMetric analysis"
-- "Analyze my financial time series with YMetric"
-- "Process my uploaded data and create trend charts"
+### "Show me a conservative investment with 5% returns"
+*🎯 HIGH VALUE: Demonstrates exact parameter mapping (mean=0.05, spread=1.0) from your semantic system*
 
-## File Upload Workflows
-- "I'm uploading financial data - analyze the trends"
-- "Here's my portfolio file - what insights can you provide?"
-- "Upload complete - run comprehensive analysis"
+### "Compare a 6% moderate strategy vs 8% aggressive approach"
+*💎 SHOWCASE: Highlights the power of comparative analysis across risk levels with real data*
 
-## Research & Insights
-- "Explain XMetric vs YMetric analysis methodologies"
-- "Search for market volatility research in your knowledge base"
-- "What do current financial trends suggest for portfolio strategy?"
+## � **Risk-Return Deep Dive** (High Impact)
 
-## Visualization & Reporting
-- "Create charts from my uploaded data"
-- "Generate executive summary with visualizations"
-- "Show correlation analysis between different metrics"
+### "How bad can market crashes get in these simulations?"
+*🚨 COMPELLING: Shows crisis modeling with 7 severity levels - unique differentiator*
 
-## User Personas
-- "I'm a portfolio manager - analyze my uploaded holdings"
-- "As an executive, summarize insights from my data file" 
-- "Academic perspective: validate methodology with citations"
+### "What's the probability of losing money over 10-year periods?"
+*📊 DATA-DRIVEN: Statistical analysis that provides concrete numbers users can understand*
+
+### "Show me worst-case scenarios for conservative vs aggressive strategies"
+*⚖️ PRACTICAL: Helps users understand real trade-offs with maximum drawdown analysis*
+
+## 🎨 **Visualization Power** (Demo-Worthy)
+
+### "Create a fan chart showing 40-year investment outcomes"
+*📈 VISUAL IMPACT: Envelope charts with percentiles make complex data accessible*
+
+### "I'm 30 and want to retire at 65 - what are my options?"
+*👤 PERSONAL: Combines life planning with data analysis - highly relatable*
+
+---
+
+## 🏆 **THE TOP 3 MUST-HAVE CARDS:**
+
+### 1. "What long-term investment scenarios are available?"
+**Why Essential:** Perfect entry point, showcases semantic categorization, reveals full capability scope
+
+### 2. "Show me a conservative investment with 5% returns"  
+**Why Valuable:** Demonstrates precise parameter mapping, provides concrete example, shows semantic understanding
+
+### 3. "Compare a 6% moderate strategy vs 8% aggressive approach"
+**Why Powerful:** Highlights comparative analysis, shows 40-year projections, demonstrates risk-return trade-offs
+
+---
+
+**🎯 Strategic Focus:** These 8 cards (3 essential + 5 high-impact) showcase your unique strengths: comprehensive historical simulations, semantic risk categorization, crisis modeling, and actionable long-term investment insights.

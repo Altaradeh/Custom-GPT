@@ -1,86 +1,128 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Financial Analytics API",
-    "description": "API for analyzing user-uploaded CSV files: XMetric, YMetric, and Portfolio analysis",
-    "version": "v1.0.0"
+    "title": "Long-Term Financial Simulation API",
+    "description": "API for analyzing long-term financial market simulations and short-term crisis scenarios. Provides comprehensive data for investment scenario analysis with semantic categorization.\n\n**Semantic Risk Categories:**\n- Conservative: spread 1.0-1.5 (Low risk, stable outcomes)\n- Moderate: spread 1.5-2.5 (Balanced risk-reward)\n- Aggressive: spread 2.5-5.0 (High risk, high potential reward)\n\n**Return Categories:**\n- Very Low: 0-3% annual return\n- Low: 3-5% annual return\n- Moderate: 5-7% annual return\n- High: 7-9% annual return\n- Very High: 9%+ annual return\n\n**Usage Examples:**\n- Conservative 5% strategy: mean=0.05, spread=1.0\n- Moderate 6% strategy: mean=0.06, spread=2.0\n- Aggressive comparison: First call get_scenarios, then analyze specific high-spread options",
+    "version": "1.0.0"
   },
   "servers": [
     {
-      "url": "https://ectypal-tonya-unthinning.ngrok-free.dev"
+      "url": "https://ectypal-tonya-unthinning.ngrok-free.dev",
+      "description": "Local FastAPI server"
     }
   ],
   "paths": {
-    "/xmetric/data": {
-      "post": {
-        "description": "Analyze CSV data uploaded by user. When user uploads a CSV file to ChatGPT, read it with Code Interpreter and send the data here.",
-        "operationId": "analyzeXMetricFromData",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "csv_data": {
-                    "type": "array",
-                    "description": "List of row dictionaries from the uploaded CSV file",
-                    "items": {
-                      "type": "object",
-                      "description": "Row data as key-value pairs"
+    "/long_term/scenarios": {
+      "get": {
+        "operationId": "getLongTermScenarios",
+        "summary": "List Available Investment Scenarios",
+        "description": "Get all available long-term financial scenarios with semantic categorization (conservative, moderate, aggressive). Use when users ask about investment options or want to compare different risk approaches.",
+        "responses": {
+          "200": {
+            "description": "List of available scenarios with semantic categories",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "target_mean": {"type": "number", "description": "Target annual return (e.g., 0.06 for 6%)"},
+                      "target_spread": {"type": "number", "description": "Risk/volatility level"},
+                      "description": {"type": "string", "description": "Human-readable scenario description"},
+                      "semantic_category": {"type": "string", "enum": ["conservative", "moderate", "aggressive"]},
+                      "total_paths": {"type": "integer", "description": "Number of simulation paths available"}
                     }
-                  },
-                  "date_column": {
-                    "type": "string",
-                    "description": "Column name for dates",
-                    "example": "date"
-                  },
-                  "value_column": {
-                    "type": "string",
-                    "description": "Column name for numeric values to analyze",
-                    "example": "close"
-                  },
-                  "aggregation": {
-                    "type": "string",
-                    "enum": ["none", "sum", "mean", "max", "min"],
-                    "default": "none",
-                    "description": "Aggregation method (case-insensitive)"
-                  },
-                  "scale_factor": {
-                    "type": "number",
-                    "default": 1.0,
-                    "minimum": 0,
-                    "description": "Scaling factor"
                   }
-                },
-                "required": ["csv_data", "date_column", "value_column"]
+                }
               }
             }
           }
-        },
+        }
+      }
+    },
+    "/long_term/paths": {
+      "get": {
+        "operationId": "analyzeLongTermScenario",
+        "summary": "Analyze Investment Scenario",
+        "description": "Get comprehensive analysis of a specific investment scenario with statistics, risk metrics, and visualization data. Use for specific scenarios or strategy comparisons. Examples: Conservative (mean=0.05, spread=1.0), Moderate (mean=0.06, spread=2.0).",
+        "parameters": [
+          {
+            "name": "mean",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 0.20,
+              "example": 0.06
+            },
+            "description": "Target annual return as decimal (e.g., 0.06 for 6% annual return)"
+          },
+          {
+            "name": "spread",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "minimum": 0.5,
+              "maximum": 5.0,
+              "example": 1.5
+            },
+            "description": "Risk/spread level (higher values = more volatile outcomes)"
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Analysis results",
+            "description": "Comprehensive scenario analysis with statistics and visualization data",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "series": {
+                    "scenario_info": {
+                      "type": "object",
+                      "properties": {
+                        "target_mean": {"type": "number"},
+                        "target_spread": {"type": "number"},
+                        "description": {"type": "string"},
+                        "semantic_category": {"type": "string"},
+                        "total_paths": {"type": "integer"}
+                      }
+                    },
+                    "summary_statistics": {
+                      "type": "object",
+                      "properties": {
+                        "average_annual_return": {"type": "number"},
+                        "average_max_drawdown": {"type": "number"},
+                        "min_annual_return": {"type": "number"},
+                        "max_annual_return": {"type": "number"},
+                        "average_lost_decades": {"type": "number"},
+                        "return_category": {"type": "string"},
+                        "risk_category": {"type": "string"}
+                      }
+                    },
+                    "envelope_chart_data": {
+                      "type": "object",
+                      "properties": {
+                        "years": {"type": "array", "items": {"type": "integer"}},
+                        "p05_path": {"type": "array", "items": {"type": "number"}},
+                        "p50_path": {"type": "array", "items": {"type": "number"}},
+                        "p95_path": {"type": "array", "items": {"type": "number"}}
+                      }
+                    },
+                    "path_details_table": {
                       "type": "array",
                       "items": {
                         "type": "object",
                         "properties": {
-                          "date": {"type": "string"},
-                          "value": {"type": "number"}
+                          "path_id": {"type": "integer"},
+                          "actual_annual_return": {"type": "number"},
+                          "max_drop": {"type": "number"},
+                          "lost_decades": {"type": "integer"},
+                          "return_category": {"type": "string"},
+                          "drawdown_category": {"type": "string"}
                         }
-                      }
-                    },
-                    "summary": {
-                      "type": "object",
-                      "properties": {
-                        "mean": {"type": "number"},
-                        "count": {"type": "integer"}
                       }
                     }
                   }
@@ -91,76 +133,28 @@
         }
       }
     },
-    "/ymetric/data": {
-      "post": {
-        "description": "Analyze CSV data uploaded by user. When user uploads a CSV file to ChatGPT, read it with Code Interpreter and send the data here.",
-        "operationId": "analyzeYMetricFromData",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "csv_data": {
-                    "type": "array",
-                    "description": "List of row dictionaries from the uploaded CSV file",
-                    "items": {
-                      "type": "object",
-                      "description": "Row data as key-value pairs"
-                    }
-                  },
-                  "date_column": {
-                    "type": "string",
-                    "description": "Column name for dates",
-                    "example": "date"
-                  },
-                  "value_column": {
-                    "type": "string",
-                    "description": "Column name for numeric values to analyze",
-                    "example": "volume"
-                  },
-                  "aggregation": {
-                    "type": "string",
-                    "enum": ["none", "sum", "mean", "max", "min"],
-                    "default": "none",
-                    "description": "Aggregation method"
-                  },
-                  "scale_factor": {
-                    "type": "number",
-                    "default": 1.0,
-                    "minimum": 0
-                  }
-                },
-                "required": ["csv_data", "date_column", "value_column"]
-              }
-            }
-          }
-        },
+    "/short_term/levels": {
+      "get": {
+        "operationId": "getShortTermLevels",
+        "summary": "List Short-Term Crisis Levels",
+        "description": "Returns the 7 available short-term crisis parameter levels (1-7) with metadata including drawdown, duration, and volatility characteristics.",
         "responses": {
           "200": {
-            "description": "Analysis results",
+            "description": "List of short-term crisis levels with parameters",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "series": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "date": {"type": "string"},
-                          "value": {"type": "number"}
-                        }
-                      }
-                    },
-                    "summary": {
-                      "type": "object",
-                      "properties": {
-                        "mean": {"type": "number"},
-                        "count": {"type": "integer"}
-                      }
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "param_set_id": {"type": "string"},
+                      "category": {"type": "string"},
+                      "level_rank": {"type": "integer", "minimum": 1, "maximum": 7},
+                      "drawdown": {"type": "number"},
+                      "t_down": {"type": "integer"},
+                      "t_up": {"type": "integer"},
+                      "annual_vol": {"type": "number"}
                     }
                   }
                 }
@@ -170,72 +164,96 @@
         }
       }
     },
-    "/portfolio/data": {
-      "post": {
-        "description": "Process portfolio data sent directly as JSON. Use this when user uploads a file to ChatGPT and you need to send the parsed data to the API.",
-        "operationId": "portfolioFromData",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "holdings": {
-                    "type": "array",
-                    "description": "Array of portfolio holdings with ticker and weight",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "ticker": {
-                          "type": "string",
-                          "description": "Stock ticker symbol"
-                        },
-                        "weight": {
-                          "type": "number",
-                          "description": "Portfolio weight (can be percentage or decimal)",
-                          "minimum": 0
-                        }
-                      },
-                      "required": ["ticker", "weight"]
-                    },
-                    "example": [
-                      {"ticker": "AAPL", "weight": 0.25},
-                      {"ticker": "MSFT", "weight": 0.30},
-                      {"ticker": "GOOGL", "weight": 0.45}
-                    ]
-                  },
-                  "normalize_weights": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Normalize weights to sum to 1.0"
+    "/short_term/baseline": {
+      "get": {
+        "operationId": "getShortTermBaseline",
+        "summary": "Normal vs Fragile Baseline Comparison",
+        "description": "Returns precomputed monthly baseline table comparing 'normal' vs 'fragile' market regimes with percentile statistics.",
+        "responses": {
+          "200": {
+            "description": "Monthly baseline comparison data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "month": {"type": "integer"},
+                      "mean_normal": {"type": "number"},
+                      "p10_normal": {"type": "number"},
+                      "p90_normal": {"type": "number"},
+                      "mean_fragile": {"type": "number"},
+                      "p10_fragile": {"type": "number"},
+                      "p90_fragile": {"type": "number"}
+                    }
                   }
-                },
-                "required": ["holdings"]
+                }
               }
             }
           }
-        },
+        }
+      }
+    },
+    "/short_term/demo_summary": {
+      "get": {
+        "operationId": "generateShortTermDemo",
+        "summary": "Generate Short-Term Crisis Demo",
+        "description": "Generates a small in-memory sample of short-term crisis paths for a specified level and returns statistical summaries and monthly tables.",
+        "parameters": [
+          {
+            "name": "level",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 7,
+              "default": 3
+            },
+            "description": "Crisis level rank (1-7, default: 3)"
+          },
+          {
+            "name": "n_paths",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 10,
+              "maximum": 200,
+              "default": 50
+            },
+            "description": "Number of crisis paths to sample (10-200, default: 50)"
+          },
+          {
+            "name": "random_state",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Optional random seed for reproducible results"
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Portfolio processed successfully",
+            "description": "Generated demo summary with statistics and monthly table",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "rows": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "ticker": {"type": "string"},
-                          "weight": {"type": "number"}
-                        }
+                    "param_set": {
+                      "type": "object",
+                      "properties": {
+                        "param_set_id": {"type": "string"},
+                        "category": {"type": "string"},
+                        "level_rank": {"type": "integer"},
+                        "drawdown": {"type": "number"}
                       }
                     },
-                    "normalized": {"type": "boolean"},
-                    "total_holdings": {"type": "integer"}
+                    "stats": {"type": "array"},
+                    "monthly_table": {"type": "array"}
                   }
                 }
               }

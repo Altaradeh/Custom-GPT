@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  longterm-api:
+    build: .
+    container_name: longterm-financial-api
+    ports:
+      - "8000:8000"
+    environment:
+      - ENV=production
+      - LOG_LEVEL=info
+    volumes:
+      - "./Long Term Model:/app/Long Term Model:ro"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  default:
+    driver: bridge
