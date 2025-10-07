@@ -87,6 +87,8 @@ short_term_baseline_df: Optional[pd.DataFrame] = None
 
 # Optional import of short-term generator utilities
 try:
+    import sys
+    sys.path.append(str(BASE_DIR / "Short Term Model"))
     from short_term_crisis_generator import (
         default_param_sets,
         compute_summaries,
@@ -94,6 +96,7 @@ try:
         _generate_full_path,
         _crisis_window,
     )
+    logger.info("Short-term crisis generator module loaded successfully")
 except Exception as _e:
     logger = logging.getLogger(__name__)
     logger.warning(f"Short-term module not fully available: {_e}")
@@ -545,7 +548,10 @@ async def health_check():
 )
 async def get_short_term_levels():
     if default_param_sets is None:
-        raise HTTPException(status_code=500, detail="Short-term generator module unavailable")
+        raise HTTPException(
+            status_code=503, 
+            detail="Short-term crisis generator module is not available. This endpoint requires the 'short_term_crisis_generator' module to be installed and properly configured."
+        )
     try:
         levels = []
         for ps in default_param_sets():
@@ -600,7 +606,10 @@ async def short_term_demo_summary(
 ):
     # Validate module availability
     if any(x is None for x in (_generate_full_path, _crisis_window, compute_summaries, monthly_table, default_param_sets)):
-        raise HTTPException(status_code=500, detail="Short-term generator utilities unavailable")
+        raise HTTPException(
+            status_code=503, 
+            detail="Short-term crisis generator module is not available. This endpoint requires the 'short_term_crisis_generator' module to be installed and properly configured."
+        )
 
     try:
         # Pick param set for level

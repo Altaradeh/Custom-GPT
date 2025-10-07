@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Long-Term Financial Simulation API",
-    "description": "API for analyzing long-term financial market simulations and short-term crisis scenarios. Provides comprehensive data for investment scenario analysis with semantic categorization.\n\n**Semantic Risk Categories:**\n- Conservative: spread 1.0-1.5 (Low risk, stable outcomes)\n- Moderate: spread 1.5-2.5 (Balanced risk-reward)\n- Aggressive: spread 2.5-5.0 (High risk, high potential reward)\n\n**Return Categories:**\n- Very Low: 0-3% annual return\n- Low: 3-5% annual return\n- Moderate: 5-7% annual return\n- High: 7-9% annual return\n- Very High: 9%+ annual return\n\n**Usage Examples:**\n- Conservative 5% strategy: mean=0.05, spread=1.0\n- Moderate 6% strategy: mean=0.06, spread=2.0\n- Aggressive comparison: First call get_scenarios, then analyze specific high-spread options",
+    "description": "API for analyzing long-term financial market simulations and short-term crisis scenarios. Provides comprehensive data for investment scenario analysis with semantic categorization.\n\n**Available Spread Values:** 1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 2.75, 3.0\n\n**Semantic Risk Categories:**\n- Conservative: spread 1.0 or 1.25 (Low risk, stable outcomes)\n- Moderate: spread 1.5, 1.75, 2.0, or 2.25 (Balanced risk-reward)\n- Aggressive: spread 2.5, 2.75, or 3.0 (High risk, high potential reward)\n\n**Return Categories:**\n- Very Low: 0-3% annual return\n- Low: 3-5% annual return\n- Moderate: 5-7% annual return\n- High: 7-9% annual return\n- Very High: 9%+ annual return\n\n**Usage Examples:**\n- Conservative 5% strategy: mean=0.05, spread=1.0\n- Moderate 6% strategy: mean=0.06, spread=2.0\n- Aggressive comparison: mean=0.06, spread=3.0",
     "version": "1.0.0"
   },
   "servers": [
@@ -65,11 +65,10 @@
             "required": true,
             "schema": {
               "type": "number",
-              "minimum": 0.5,
-              "maximum": 5.0,
+              "enum": [1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 2.75, 3.0],
               "example": 1.5
             },
-            "description": "Risk/spread level (higher values = more volatile outcomes)"
+            "description": "Risk/spread level. Available values: 1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 2.75, 3.0 (higher values = more volatile outcomes)"
           }
         ],
         "responses": {

@@ -1,5 +1,5 @@
-# Use Python 3.11 slim image for better performance
-FROM python:3.11-slim
+# Use Python 3.11 alpine image for better compatibility
+FROM python:3.11-alpine
 
 # Set working directory
 WORKDIR /app
@@ -10,9 +10,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONPATH=/app
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache \
+    gcc \
+    musl-dev \
+    linux-headers
 
 # Copy requirements first for better caching
 COPY requirements.txt .
@@ -25,16 +26,16 @@ RUN pip install --no-cache-dir --upgrade pip && \
 COPY . .
 
 # Create non-root user for security
-RUN adduser --disabled-password --gecos '' --shell /bin/bash appuser && \
+RUN adduser -D -s /bin/sh appuser && \
     chown -R appuser:appuser /app
 USER appuser
 
 # Expose port
-EXPOSE 8000
+EXPOSE 8002
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD python -c "import requests; requests.get('http://localhost:8000/health')"
+    CMD python -c "import requests; requests.get('http://localhost:8002/')"
 
 # Command to run the application
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8002"]
