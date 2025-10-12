@@ -1,0 +1,51 @@
+{
+  "version": "1.0",
+  "generated_at": "2025-10-12",
+  "limits": {
+    "max_paths_per_root": 30,
+    "max_depth": 3,
+    "max_industries_per_product": 3,
+    "max_similarities_per_product": 3,
+    "max_indirect_targets_listed": 5,
+    "max_overlaps_per_scenario": 5,
+    "similarity_threshold": 0.65
+  },
+  "files": {
+    "string_lookups.json": {
+      "purpose": "ID-to-string mappings",
+      "categories": 5
+    },
+    "paths_compact.csv": {
+      "rows": 15643,
+      "note": "Top paths per root with IDs"
+    },
+    "chains_manifest.csv": {
+      "rows": 15643,
+      "note": "Full node sequences"
+    },
+    "scenario_summary.csv": {
+      "rows": 3431,
+      "note": "Events + locations merged"
+    },
+    "industry_exposure_top.csv": {
+      "rows": 2414,
+      "note": "Top 3 per product"
+    },
+    "company_exposure_compact.csv": {
+      "rows": 2983,
+      "note": "Non-zero exposures only"
+    },
+    "similarity_top.csv": {
+      "rows": 2239,
+      "note": "Top 3 per product"
+    },
+    "overlap_top.csv": {
+      "rows": 8090,
+      "note": "Top 5 per scenario"
+    },
+    "product_aliases.csv": {
+      "rows": 14,
+      "note": "Unchanged from full version"
+    }
+  }
+}

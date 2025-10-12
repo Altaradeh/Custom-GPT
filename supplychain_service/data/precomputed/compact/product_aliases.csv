@@ -1,0 +1,15 @@
+canonical_term,alias,match_confidence,type
+Cobalt,cobalt metal,0.75,commodity
+Cobalt,Cobalt,0.95,commodity
+Cobalt,cobalt powder,0.75,commodity
+Lithium Batteries,li-ion batteries,0.75,commodity
+Lithium Batteries,Lithium Batteries,0.95,commodity
+Lithium Batteries,battery packs,0.75,commodity
+Drought,Drought,0.95,event
+Geopolitical Conflict,Geopolitical Conflict,0.95,event
+Taiwan,Taiwan,0.95,location
+Ukraine,Ukraine,0.95,location
+Brazil,Brazil,0.95,location
+Crude Oil,Crude Oil,0.95,commodity
+Wheat,Wheat,0.95,commodity
+Natural Gas,Natural Gas,0.95,commodity

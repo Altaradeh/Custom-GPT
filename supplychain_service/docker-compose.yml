@@ -1,0 +1,15 @@
+services:
+  supplychain_service:
+    build:
+      context: ../..
+      dockerfile: micro_service/supplychain_service/Dockerfile
+    container_name: supplychain_service
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+
+networks:
+  app-network:
